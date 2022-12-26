@@ -10,6 +10,12 @@ const ProductSchema = new Schema({
     unique: true,
     null: false
   },
+  name: {
+    type: String,
+    require: true,
+    unique: false,
+    null: false
+  },
   description: {
     type: String,
     require: true,

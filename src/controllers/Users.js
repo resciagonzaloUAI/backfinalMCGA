@@ -1,51 +1,43 @@
 const User = require('../models/Users.js');
 const jwt = require('jsonwebtoken');
-
+const moment = require('moment');
 
 const loginUser = async (req, res) => {
-  try{
-      console.log(req.body);
-      let email = req.body.email;
-      let user = await User.findOne({
-          email: email,
-          password: req.body.pass
-      });
-      if(!user)
-          return res.status(401).json({
-              Success: false,
-              Message: "Invalid user"
-          })
-
-      const token = jwt.sign({
-          email: email,
-          userId: user._id
-      },
-      process.env.JWT_KEY,
-      {
-          expiresIn: '1d'
-      });
-      const updatedUser = await User.findOneAndUpdate(
-          { email: email },
-          { token },
-          { new: true }
-      );
-      res.status(200).json({
+  try {
+    console.log(req.body);
+    const user = await User.findOne({ mail: req.body.user });
+    if (user) {
+      if (user.password === req.body.password) {
+        const token = generateJWT(user);
+        res.status(200).json({
           Message: 'User logged',
           Success: true,
           data: {
-              email: updatedUser.email,
-              token: updatedUser.token,
-              id: updatedUser._id
+              email: user.mail,
+              token: token
           }
       })
+
+      } else {
+        res.status(401).json({ message: "Contraseña incorrecta" });
+      }
+    } else {
+      res.status(404).json({ message: "El usuario no existe" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  catch (err){
-      console.log(err);
-      res.status(500).json({
-          Success: false,
-          Message: err
-      })
+}
+
+const generateJWT = (user) => {
+  const payload = {
+    sub: user._id,
+    username: user.mail,
+    iat: moment().unix(),
+    exp: moment().add(10, 'days').unix()
   }
+
+  return jwt.sign(payload, process.env.JWT_KEY)
 }
 
 //const getUsers = async (req, res) => {

@@ -4,9 +4,12 @@ const jwt = require('jsonwebtoken');
 const checkAuth = async (req, res, next) => {
     try{
         const { token } = req.headers;
-        const decoded = await jwt.verify(token, process.env.JWT_KEY);
-        const user = await User.findById(decoded.userId);
-        if(token !== user.token){
+        console.log(token);
+        const decoded = await jwt.verify(JSON.parse(token), process.env.JWT_KEY);
+        console.log(decoded);
+        const user = await User.findOne({ mail: decoded.username });       
+        console.log(user); 
+        if(!token || !user){
             throw new Error('Invalid token');
         }
         next();
