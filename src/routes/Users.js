@@ -13,7 +13,7 @@ const {
 const authMiddleware = require('../Middlewares/Auth.js');
 
 router.post('/login', loginUser);
-router.get('/', authMiddleware, getUsers);
+router.get('/', getUsers);
 router.post('/add', authMiddleware, createUser);
 router.put('/update/:id', authMiddleware, updateUser);
 router.put('/activate/:id', authMiddleware, activateUser);
