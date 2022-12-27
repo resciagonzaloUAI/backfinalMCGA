@@ -1,11 +1,4 @@
 {
-    "version": 2,
-    "name": "final-mcga",
-    "builds": [
-       { "src": "index.js", "use": "@now/node" }
-    ],
-    "routes": [
-       { "src": "/(.*)", "dest": "index.js" }
-    ]
- }
+    "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
+  }
 
