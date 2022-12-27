@@ -1,7 +1,7 @@
 const express = require('express');
-const indexRoutes = require('./routes');
+const indexRoutes = require('./src/routes');
 const mongoose = require('mongoose');
-const productsRoutes = require('./routes/products');
+const productsRoutes = require('./src/routes/products');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -27,3 +27,5 @@ mongoose.connect(URL_DB).then(() => {
   console.log('🔴 There was an error on the DB connection method.');
   console.log(err);
 })
+
+module.exports = app;
